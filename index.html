@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MioBrand - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">MioBrand</div>
+    <nav>
+        <ul>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="container">
+    <h1 class="section-title">I Tuoi Dati Privati</h1>
+    
+    <div class="grid">
+        <div class="card">
+            <h3>Come ti senti oggi?</h3>
+            <div class="emoji-container" id="emojiSelector">
+                <div class="emoji-item" onclick="selectMood(1, this)">
+                    <span>😫</span>
+                    <p>Pessimo</p>
+                </div>
+                <div class="emoji-item" onclick="selectMood(2, this)">
+                    <span>😔</span>
+                    <p>Giù</p>
+                </div>
+                <div class="emoji-item" onclick="selectMood(3, this)">
+                    <span>😐</span>
+                    <p>Neutro</p>
+                </div>
+                <div class="emoji-item" onclick="selectMood(4, this)">
+                    <span>🙂</span>
+                    <p>Buono</p>
+                </div>
+                <div class="emoji-item" onclick="selectMood(5, this)">
+                    <span>😁</span>
+                    <p>Ottimo</p>
+                </div>
+            </div>
+            <input type="text" id="moodNote" placeholder="Aggiungi una nota (opzionale)...">
+            <button class="btn" onclick="inviaUmore()">Salva Umore</button>
+            <p id="statusMsg" style="text-align: center; margin-top: 10px;"></p>
+        </div>
+
+        <div class="card">
+            <h3>Il tuo report</h3>
+            <div class="result-box">
+                <p>La tua media umore è:</p>
+                <div id="scoreDisplay" class="mood-score">--</div>
+                <button class="btn" onclick="ottieniReport()">Carica Media</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 30px; overflow-x: auto;">
+        <h3>Ultimi 7 Giorni</h3>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Umore</th>
+                    <th>Nota</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                </tbody>
+        </table>
+        <p id="noDataMsg" style="display:none; text-align:center; padding: 20px; opacity: 0.7;">
+            Ancora nessun dato registrato.
+        </p>
+    </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
