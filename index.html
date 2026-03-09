@@ -46,7 +46,10 @@
                 </div>
             </div>
             <input type="text" id="moodNote" placeholder="Aggiungi una nota (opzionale)...">
+            
             <button class="btn" onclick="inviaUmore()">Salva Umore</button>
+            <button class="btn" style="background-color: #ff4d4d; margin-top: 10px;" onclick="eliminaUmoreOggi()">Cancella l'umore di oggi</button>
+            
             <p id="statusMsg" style="text-align: center; margin-top: 10px;"></p>
         </div>
 
@@ -55,7 +58,7 @@
             <div class="result-box">
                 <p>La tua media umore è:</p>
                 <div id="scoreDisplay" class="mood-score">--</div>
-                <button class="btn" onclick="ottieniReport()">Carica Media</button>
+                <button class="btn" onclick="caricaDati()">Carica Media</button>
             </div>
         </div>
     </div>

@@ -66,5 +66,25 @@ function logout() {
     window.location.href = "login.html";
 }
 
+// --- NUOVA FUNZIONE: Cancella l'umore di oggi ---
+async function eliminaUmoreOggi() {
+    if (!confirm("Sei sicuro di voler cancellare l'umore di oggi? Potrai inserirne uno nuovo.")) return;
+
+    const res = await fetch(`${API_URL}/mood/today`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+        alert("Umore di oggi cancellato con successo!");
+        location.reload(); // Ricarica la pagina per aggiornare tutto
+    } else {
+        alert(data.error);
+    }
+}
+
 // Avvia al caricamento
 if (document.getElementById('historyBody')) caricaDati();

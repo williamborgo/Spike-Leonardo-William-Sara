@@ -29,7 +29,11 @@ let db;
             FOREIGN KEY(user_id) REFERENCES users(id)
         );
     `);
-    console.log("✅ Server pronto su porta 5500 e Database collegato.");
+    
+    // Server in ascolto SOLO DOPO che il database è pronto
+    app.listen(PORT, () => {
+        console.log("✅ Server pronto su porta 5500 e Database collegato.");
+    });
 })();
 
 // Middleware per proteggere le rotte
@@ -85,4 +89,16 @@ app.get('/api/history', authenticateToken, async (req, res) => {
     res.json(rows);
 });
 
-app.listen(PORT);
+// --- NUOVA ROTTA: Cancella l'umore di oggi (Versione Sicura) ---
+app.delete('/api/mood/today', authenticateToken, async (req, res) => {
+    const today = new Date().toISOString().split('T')[0];
+    try {
+        // Forza la cancellazione dell'umore di oggi per questo utente
+        await db.run('DELETE FROM mood_logs WHERE user_id = ? AND date = ?', [req.user.id, today]);
+        
+        // Risponde sempre con successo
+        res.json({ success: true, message: "Umore di oggi cancellato!" });
+    } catch (err) { 
+        res.status(500).json({ error: "Errore durante l'eliminazione." }); 
+    }
+});
