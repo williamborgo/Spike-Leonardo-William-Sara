@@ -30,13 +30,11 @@ let db;
         );
     `);
     
-    // Server in ascolto SOLO DOPO che il database è pronto
     app.listen(PORT, () => {
         console.log("✅ Server pronto su porta 5500 e Database collegato.");
     });
 })();
 
-// Middleware per proteggere le rotte
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -49,7 +47,6 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// --- ROTTE ---
 app.post('/api/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -78,8 +75,9 @@ app.post('/api/mood', authenticateToken, async (req, res) => {
     } catch (err) { res.status(500).json({ error: "Errore database" }); }
 });
 
+// --- MEDIA MODIFICATA: ORA PRENDE SOLO GLI ULTIMI 7 INSERIMENTI ---
 app.get('/api/report', authenticateToken, async (req, res) => {
-    const rows = await db.all('SELECT mood FROM mood_logs WHERE user_id = ?', [req.user.id]);
+    const rows = await db.all('SELECT mood FROM mood_logs WHERE user_id = ? ORDER BY id DESC LIMIT 7', [req.user.id]);
     const avg = rows.length ? (rows.reduce((a, b) => a + b.mood, 0) / rows.length).toFixed(1) : 0;
     res.json({ average: avg });
 });
@@ -89,14 +87,10 @@ app.get('/api/history', authenticateToken, async (req, res) => {
     res.json(rows);
 });
 
-// --- NUOVA ROTTA: Cancella l'umore di oggi (Versione Sicura) ---
 app.delete('/api/mood/today', authenticateToken, async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     try {
-        // Forza la cancellazione dell'umore di oggi per questo utente
         await db.run('DELETE FROM mood_logs WHERE user_id = ? AND date = ?', [req.user.id, today]);
-        
-        // Risponde sempre con successo
         res.json({ success: true, message: "Umore di oggi cancellato!" });
     } catch (err) { 
         res.status(500).json({ error: "Errore durante l'eliminazione." }); 
